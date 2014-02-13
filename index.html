@@ -19,7 +19,7 @@
 
    <body data-ng-app>
       <div class="container">
-         <h1>Nick's Temperature Monitor</h1>
+         <h2>Nick's Temperature Monitor</h1>
          <div class="alert fade in" id="info-alert" hidden data-spy="affix"></div>
          <div class="panel panel-default" id="settings-panel">
             <div class="panel-heading">
@@ -44,9 +44,7 @@
 
          <div class="panel panel-primary">
             <div class="panel-heading">
-               <h4 class="panel-title"><a data-toggle="collapse" href="#functions"> 
-                  Current Temperatures. 
-                  </a></h4>
+               <h4 class="panel-title"><a data-toggle="collapse" href="#functions"> Current Temperatures. </a></h4>
             </div>
             <div id="functions" class="panel-collapse collapse in">
                <div class="panel-body">
@@ -55,34 +53,43 @@
                   </p>
                   <div class="row">
                      <div class="col-lg-5">
-                        <h3>
-                        <span class="label label-success">Temp A</span>
-                        <span class="label label-default" id="temp-a">20.75 C</span>
-                        <span class="label label-danger" id="temp-a-error">Danger</span>
-                        </h3>
+                        <h3><span class="label label-success">Temp A</span>
+                        <span class="label label-default" id="temp-a">20.75 C</span> <span class="label label-danger" id="temp-a-error">Danger</span></h3>
                      </div><!-- /.col-lg-6 -->
                      <div class="col-lg-5">
-                        <h3>
-                        <span class="label label-success">Temp B</span>
-                        <span class="label label-default" id="temp-b">22.75 C</span>
-                        <span class="label label-danger"id="temp-b-error">Danger</span>
-                        </h3>
+                        <h3><span class="label label-success">Temp B</span>
+                        <span class="label label-default" id="temp-b">22.75 C</span> <span class="label label-danger"id="temp-b-error">Danger</span></h3>
                      </div><!-- /.col-lg-6 -->
-                     <br><br/>
-                     <div class="col-lg-2">
-                         <div class="input-group">
-                           <button class="btn btn-success" type="button" id="post-test">Test</button>
-                         </div><!-- /input-group -->
-                    </div><!-- /.col-lg-6 -->   
                   </div><!-- /.row -->
+                  <div class="row">
+                     <div class="col-lg-2">
+                        <div class="input-group">
+                           <button class="btn btn-success" type="button" id="post-test">
+                              Test
+                           </button>
+                        </div><!-- /input-group -->
+                     </div><!-- /.col-lg-6 -->
+                  </div>
                </div>
             </div>
          </div>
          
-        <div id="chart_div" style="width: 90%; height: 500px;"></div>
-           
-      </div>
-    
+         <div class="panel panel-primary">
+            <div class="panel-heading">
+               <h4 class="panel-title"><a data-toggle="collapse" href="#graphs"> Graph. </a></h4>
+            </div>
+            <div id="graphs" class="panel-collapse collapse in">
+               <div class="panel-body">
+                  <!-- <p>
+                     <label id="lbl-sample-date">Last Sample Today!</label>
+                  </p> -->
+                  <div id="chart_div" style="width: 100%; height: 500px;">Graph Here</div>
+               </div>
+            </div>
+         </div>
+         
+         
+
       </div>
 
       <script type="text/javascript" src="https://www.google.com/jsapi"></script>
