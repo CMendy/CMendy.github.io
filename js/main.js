@@ -170,10 +170,10 @@ $(document).ready(function()
       alert = $("#info-alert");
       alert.text("Ruh roh!").removeClass("alert-success").addClass("alert-danger");
       alert.show();
-      setTimeout(function()
-      {
-         alert.hide();
-      }, 2000);
+      // setTimeout(function()
+      // {
+         // alert.hide();
+      // }, 2000);
    }
 
 	function onGetDataFailure()
@@ -181,10 +181,10 @@ $(document).ready(function()
       alert = $("#info-alert");
       alert.text("Ruh roh! Could not retrive temperature data.").removeClass("alert-success").addClass("alert-danger");
       alert.show();
-      setTimeout(function()
-      {
-         alert.hide();
-      }, 2000);
+      // setTimeout(function()
+      // {
+         // alert.hide();
+      // }, 2000);
    }
 
 
