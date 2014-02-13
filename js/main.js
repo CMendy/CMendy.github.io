@@ -7,8 +7,7 @@ $(document).ready(function()
 
 	loadGoogleLib();
 
-	//setTestVals();
-   // Change settings header if we don't have info
+   //Change settings header if we don't have info
    checkSettings();
 
 
@@ -18,9 +17,20 @@ $(document).ready(function()
    {
       $("#api-token").val(localStorage.getItem("api-token"));
    }
+   else
+   {
+   	localStorage.setItem("api-token","93499e15f3b3a36952c283bdf77c161977a626da");
+   	$("#api-token").val(localStorage.getItem("api-token"));
+   }
+   
    if (localStorage.getItem("core-id"))
    {
       $("#core-id").val(localStorage.getItem("core-id"));
+   }
+   else
+   {
+   	localStorage.setItem("core-id", "50ff71065067545644320387");
+   	$("#core-id").val(localStorage.getItem("core-id"));
    }
 
    // Save core id and token values to local storage whenever they're changed
@@ -132,12 +142,6 @@ $(document).ready(function()
       });    
 	}
 
-	function setTestVals()
-	{
-		 localStorage.setItem("api-token","93499e15f3b3a36952c283bdf77c161977a626da");
-		 localStorage.setItem("core-id", "50ff71065067545644320387");
-	}
-	
    ////
    // Alerts
    ////
