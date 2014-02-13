@@ -7,8 +7,7 @@ $(document).ready(function()
 
 	loadGoogleLib();
 
-   //Change settings header if we don't have info
-   checkSettings();
+ 
 
 
 
@@ -33,6 +32,9 @@ $(document).ready(function()
    	$("#core-id").val(localStorage.getItem("core-id"));
    }
 
+  //Change settings header if we don't have info
+   checkSettings();
+   
    // Save core id and token values to local storage whenever they're changed
    $("#api-token").on("change", function()
    {
