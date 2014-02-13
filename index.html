@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Nick's Temperature Monitor</title>
+
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/style.css" rel="stylesheet">
+      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+      <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   </head>
+
+   <body>
+      <div class="container">
+         <h1>Nick's Temperature Monitor</h1>
+         <div class="alert fade in" id="info-alert" hidden data-spy="affix"></div>
+         <div class="panel panel-default" id="settings-panel">
+            <div class="panel-heading">
+               <h4 class="panel-title"><a data-toggle="collapse" href="#settings"> Core ID and API Token </a></h4>
+            </div>
+            <div id="settings" class="panel-collapse collapse in">
+               <div class="panel-body">
+                  <p>
+                     Visit <a href="https://www.spark.io/build" target="_blank">https://www.spark.io/build</a> to get the ID of the core to access and your unique API token.
+                  </p>
+                  <div class="input-group">
+                     <span class="input-group-addon">Core ID</span>
+                     <input type="text" class="form-control" id="core-id" placeholder="Core ID" value="">
+                  </div>
+                  <div class="input-group">
+                     <span class="input-group-addon">API Token</span>
+                     <input type="text" class="form-control" id="api-token" placeholder="API Token" value="">
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="panel panel-primary">
+            <div class="panel-heading">
+               <h4 class="panel-title"><a data-toggle="collapse" href="#functions"> 
+                  Current Temperatures. 
+                  </a></h4>
+            </div>
+            <div id="functions" class="panel-collapse collapse in">
+               <div class="panel-body">
+                  <p>
+                     <label id="lbl-sample-date">Last Sample Today!</label>
+                  </p>
+                  <div class="row">
+                     <div class="col-lg-5">
+                        <h3>
+                        <span class="label label-success">Thermocouple A</span>
+                        <span class="label label-default" id="temp-a">20.75 C</span>
+                        <span class="label label-danger" id="temp-a-error">Danger</span>
+                        </h3>
+                     </div><!-- /.col-lg-6 -->
+                     <div class="col-lg-5">
+                        <h3>
+                        <span class="label label-success">Thermocouple B</span>
+                        <span class="label label-default" id="temp-b">22.75 C</span>
+                        <span class="label label-danger"id="temp-b-error">Danger</span>
+                        </h3>
+                     </div><!-- /.col-lg-6 -->
+                     <br><br/>
+                     <div class="col-lg-2">
+                         <div class="input-group">
+                           <button class="btn btn-success" type="button" id="post-test">Test</button>
+                         </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->   
+                  </div><!-- /.row -->
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="chart_div" style="width: 900px; height: 500px;"></div>
+      </div>
+
+      <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+
+      <!--
+      <script type="text/javascript">
+      google.load("visualization", "1",
+      {
+      packages : ["corechart"]
+      });
+      google.setOnLoadCallback(drawChart);
+      function drawChart()
+      {
+      var data = google.visualization.arrayToDataTable([['Year', 'Sales', 'Expenses'], ['2004', 1000, 400], ['2005', 1170, 460], ['2006', 660, 1120], ['2007', 1030, 540]]);
+
+      var options =
+      {
+      title : 'Company Performance'
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+      }
+      </script> -->
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+      <!-- <script src="https://code.jquery.com/jquery.js"></script> -->
+      <script type="text/javascript" src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>     -->
+      <script type="text/javascript" src="js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="js/main.js"></script>
+   </body>
+</html>
