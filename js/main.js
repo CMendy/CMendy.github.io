@@ -1,9 +1,11 @@
 $(document).ready(function()
 {
    var baseURL = "https://api.spark.io/v1/devices/";
-   var timer1, timer2, timer3, timer4;
+   var timer1, timer2, timer3, timer4, sampleTimer;
    var rawData = "0.0;0.0;0;0";
    var lastSample = new Date();
+	var chartData = [['Time', 'TempA', 'TempB']];
+	
 
 	loadGoogleLib();
 
@@ -69,10 +71,15 @@ $(document).ready(function()
 	// My temperature data stuff
 	/////
 
- 	parseData();
+ 	//parseData();
 
-	getTemperatureData();
+	//getTemperatureData();
 
+	sampleTimer = setInterval(function()
+	{
+	   getTemperatureData();
+	}, 1000);
+	
 	function parseData()
 	{
 		document.getElementById('lbl-sample-date').innerHTML = "Last Sample: " + lastSample.toLocaleTimeString();
@@ -115,7 +122,7 @@ $(document).ready(function()
 					error = "Thermocouple is short-circuited to GND, is the bare wire touching somehting? ";
 					break;
 				case "3":
-					error = "Thermocouple is short-circuited to VCC, is the bare wire touching somehting? ";
+					error = "Thermocouple is short-circuited to VCC, is the bare wi;re touching somehting? ";
 					break;
 				case "4":
 					error = "Serial Peripheral Interface Fault, cant comunicate with the thermocouple hardware!";
@@ -123,7 +130,11 @@ $(document).ready(function()
 			}
 			document.getElementById('temp-b-error').innerHTML = error;
 			
+			chartData.push([new Date(), parseFloat(dats[0]), parseFloat(dats[1]) ]);
+			document.getElementById('lbl-debug-data').innerHTML = chartData.length + " Samples."
+			
 		}
+		
 		
 		 //$("#lbl-sample-date").innerHTML = "your text goes here"; 
 	}
@@ -137,6 +148,7 @@ $(document).ready(function()
          rawData = res.result;
          lastSample = new Date();
          parseData();
+         drawChart();
          }
          ).fail(function(obj)
       {
@@ -215,7 +227,7 @@ $(document).ready(function()
       getTemperatureData();
    });
    
-   
+
    
    
    $("#post-1").on("click", function()
@@ -308,11 +320,11 @@ $(document).ready(function()
 
    function drawChart()
    {
-      var data = google.visualization.arrayToDataTable([['Year', 'Sales', 'Expenses'], ['2004', 1000, 400], ['2005', 1170, 460], ['2006', 660, 1120], ['2007', 1030, 540]]);
-
+     // var data = google.visualization.arrayToDataTable([['Time', 'TempA', 'TempB'], ['1', 21, 21.5], ['2', 23, 21.5],['3', 30, 21],['4', 50, 21],['5', 70, 21.5],['6', 72, 21.5],['7', 73, 21.5],['8', 74, 20],['9', 21, 21.5]]);
+		var data = google.visualization.arrayToDataTable(chartData);
       var options =
       {
-         title : 'Company Performance'
+         title : 'Temperature  Graph'
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

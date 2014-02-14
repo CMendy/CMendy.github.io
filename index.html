@@ -19,8 +19,8 @@
 
    <body data-ng-app>
       <div class="container">
-         <h2>Nick's Temperature Monitor</h1>
-         <div class="alert fade in" id="info-alert" hidden data-spy="affix"></div>
+         <h2>Nick's Temperature Monitor</h2>
+         <div class="alert fade in" id="info-alert" hidden data-spy="affix">Alert Here</div>
          <div class="panel panel-default" id="settings-panel">
             <div class="panel-heading">
                <h4 class="panel-title"><a data-toggle="collapse" href="#settings"> Core ID and API Token </a></h4>
@@ -76,14 +76,14 @@
          
          <div class="panel panel-primary">
             <div class="panel-heading">
-               <h4 class="panel-title"><a data-toggle="collapse" href="#graphs"> Graph. </a></h4>
+               <h4 class="panel-title"><a data-toggle="collapse" href="#graphs">Graph.</a></h4>
             </div>
             <div id="graphs" class="panel-collapse collapse in">
                <div class="panel-body">
-                  <!-- <p>
-                     <label id="lbl-sample-date">Last Sample Today!</label>
-                  </p> -->
-                  <div id="chart_div" style="width: 100%; height: 500px;">Graph Here</div>
+                   <p>
+                     <label id="lbl-debug-data">Last Sample Today!</label>
+                  </p> 
+                  <div id="chart_div" style="width: 100%; height: 500px;">Drawing Graph</div>
                </div>
             </div>
          </div>
@@ -94,8 +94,8 @@
 
       <script type="text/javascript" src="https://www.google.com/jsapi"></script>
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-      <!-- <script src="https://code.jquery.com/jquery.js"></script> -->
-      <script type="text/javascript" src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+      <script src="https://code.jquery.com/jquery.js"></script>
+      <!-- <script type="text/javascript" src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script> -->
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
       <script type="text/javascript" src="js/bootstrap.min.js"></script>
       <script type="text/javascript" src="js/main.js"></script>
