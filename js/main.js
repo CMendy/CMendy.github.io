@@ -1,15 +1,33 @@
 $(document).ready(function()
 {
+
    var baseURL = "https://api.spark.io/v1/devices/";
-   var timer1, timer2, timer3, timer4, sampleTimer;
+   var sampleTimer;
    var rawData = "0.0;0.0;0;0";
+   var rawDataPrevious = "0.0;0.0;0;0";
    var lastSample = new Date();
-	var chartData = [['Time', 'TempA', 'TempB']];
+	//var chartData = [['Time', 'Temp A', 'Temp B']];
+	var dataTable = null;
+
+	var googleOptions = {packages: ['corechart'], callback : BuildGoogleTable};
+	google.load('visualization', '1', googleOptions);
+		
+	function BuildGoogleTable()
+	{
+		dataTable = new google.visualization.DataTable();
+		// dataTable.addColumn('datetime', 'Time'); // Implicit domain label col.
+		// dataTable.addColumn('number', 'Temp A'); // Implicit series 1 data col.
+		// dataTable.addColumn('number', 'Temp B'); // Implicit series 1 data col.
 	
-
-	loadGoogleLib();
-
- 
+		dataTable.addColumn('datetime', 'Time'); // Implicit domain label col.
+		dataTable.addColumn('number', 'Temp A'); // Implicit series 1 data col.
+		dataTable.addColumn({type:'string', role:'annotation'}); // annotation role col.
+		dataTable.addColumn({type:'string', role:'annotationText'}); // annotationText col.
+		dataTable.addColumn('number', 'Temp B'); // Implicit series 1 data col.
+		dataTable.addColumn({type:'string', role:'annotation'}); // annotation role col.
+		dataTable.addColumn({type:'string', role:'annotationText'}); // annotationText col.
+		drawChart();
+	}
 
 
 
@@ -94,45 +112,76 @@ $(document).ready(function()
 			// define SCV_FAULT 3
 			// define SCG_FAULT 2
 			// define OC_FAULT 1
-			var error = "";
+			var errorA = null;
+			var annotA = null;
 			switch(dats[2])
 			{
 				case "1":
-					error = "Open Connetion, is the thermocouple wire plugged in?";
+					errorA = "Open Connetion, is the thermocouple wire plugged in?";
+					annotA = "E";
 					break;
 				case "2":
-					error = "Thermocouple is short-circuited to GND, is the bare wire touching somehting? ";
+					errorA = "Thermocouple is short-circuited to GND, is the bare wire touching somehting? ";
+					annotA = "E";
 					break;
 				case "3":
-					error = "Thermocouple is short-circuited to VCC, is the bare wire touching somehting? ";
+					errorA = "Thermocouple is short-circuited to VCC, is the bare wire touching somehting? ";
+					annotA = "E";
 					break;
 				case "4":
-					error = "Serial Peripheral Interface Fault, cant comunicate with the thermocouple hardware!";
+					errorA = "Serial Peripheral Interface Fault, cant comunicate with the thermocouple hardware!";
+					annotA = "E";
+					break;
+				case "5":
+					errorA = "Could not comunicate with Spark device, is it on and connected to the internet?";
+					annotA = "E";
 					break;
 			}
-			document.getElementById('temp-a-error').innerHTML = error;
+			document.getElementById('temp-a-error').innerHTML = errorA;
 			
-			error = "";
+			var errorB = null;
+			var annotB = null;
 			switch(dats[3])
 			{
 				case "1":
-					error = "Open Connetion, is the thermocouple wire plugged in?";
+					errorB = "Open Connetion, is the thermocouple wire plugged in?";
+					annotB = "B";
 					break;
 				case "2":
-					error = "Thermocouple is short-circuited to GND, is the bare wire touching somehting? ";
+					errorB = "Thermocouple is short-circuited to GND, is the bare wire touching somehting? ";
+					annotB = "B";
 					break;
 				case "3":
-					error = "Thermocouple is short-circuited to VCC, is the bare wi;re touching somehting? ";
+					errorB = "Thermocouple is short-circuited to VCC, is the bare wi;re touching somehting? ";
+					annotB = "B";
 					break;
 				case "4":
-					error = "Serial Peripheral Interface Fault, cant comunicate with the thermocouple hardware!";
+					errorB = "Serial Peripheral Interface Fault, cant comunicate with the thermocouple hardware!";
+					annotB = "B";
+					break;
+				case "5":
+					errorA = "Could not comunicate with Spark device, is it on and connected to the internet?";
+					annotA = "E";
 					break;
 			}
-			document.getElementById('temp-b-error').innerHTML = error;
+			document.getElementById('temp-b-error').innerHTML = errorB;
 			
-			chartData.push([new Date(), parseFloat(dats[0]), parseFloat(dats[1]) ]);
-			document.getElementById('lbl-debug-data').innerHTML = chartData.length + " Samples."
-			
+			if(rawDataPrevious != rawData)
+			{
+				//chartData.push([new Date(), parseFloat(dats[0]), parseFloat(dats[1]) ]);
+				rawDataPrevious = rawData;
+				if(dataTable !== null)
+				{
+					
+					dataTable.addRow([new Date(), parseFloat(dats[0]), annotA, errorA, parseFloat(dats[1]), annotB, errorB]);
+					 
+					document.getElementById('lbl-debug-data').innerHTML = dataTable.getNumberOfRows() + " Samples.";
+				}
+				else
+				{
+					document.getElementById('lbl-debug-data').innerHTML ="0 Samples.";
+				}
+			}
 		}
 		
 		
@@ -153,6 +202,10 @@ $(document).ready(function()
          ).fail(function(obj)
       {
       	onGetDataFailure();
+      	rawData = "0.0;0.0;5;5";
+         lastSample = new Date();
+         parseData();
+         drawChart();
       });    
 	}
 
@@ -228,26 +281,6 @@ $(document).ready(function()
    });
    
 
-   
-   
-   $("#post-1").on("click", function()
-   {
-      doMethod($("#method-1").val(), $("#data-1").val());
-   });
-   $("#post-2").on("click", function()
-   {
-      doMethod($("#method-2").val(), $("#data-2").val());
-   });
-   $("#post-3").on("click", function()
-   {
-      doMethod($("#method-3").val(), $("#data-3").val());
-   });
-   $("#post-4").on("click", function()
-   {
-      doMethod($("#method-4").val(), $("#data-4").val());
-   });
-
-
    ////
    // Variables
    ////
@@ -261,157 +294,24 @@ $(document).ready(function()
       });
    }
 
-   // Variable on clicks
-   $("#get-var-1").on("click", function()
-   {
-      getVariable1();
-   });
-   $("#get-var-2").on("click", function()
-   {
-      getVariable2();
-   });
-   $("#get-var-3").on("click", function()
-   {
-      getVariable3();
-   });
-   $("#get-var-4").on("click", function()
-   {
-      getVariable4();
-   });
-
-   // Get variable methods
-   function getVariable1()
-   {
-      getVariable($("#var-1").val(), function(res)
-      {
-         $("#var-val-1").val(res.result);
-      });
-   }
-
-   function getVariable2()
-   {
-      getVariable($("#var-2").val(), function(res)
-      {
-         $("#var-val-2").val(res.result);
-      });
-   }
-
-   function getVariable3()
-   {
-      getVariable($("#var-3").val(), function(res)
-      {
-         $("#var-val-3").val(res.result);
-      });
-   }
-
-   function getVariable4()
-   {
-      getVariable($("#var-4").val(), function(res)
-      {
-         $("#var-val-4").val(res.result);
-      });
-   }
-
-   function loadGoogleLib()
-   {
-      var options = {packages: ['corechart'], callback : drawChart};
-		google.load('visualization', '1', options);
-   }
-
    function drawChart()
    {
-     // var data = google.visualization.arrayToDataTable([['Time', 'TempA', 'TempB'], ['1', 21, 21.5], ['2', 23, 21.5],['3', 30, 21],['4', 50, 21],['5', 70, 21.5],['6', 72, 21.5],['7', 73, 21.5],['8', 74, 20],['9', 21, 21.5]]);
-		var data = google.visualization.arrayToDataTable(chartData);
-      var options =
-      {
-         title : 'Temperature  Graph'
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
+   	if(dataTable !== null)
+   	{
+	      //var data = google.visualization.arrayToDataTable([['Time', 'TempA', 'TempB'], ['1', 21, 21.5], ['2', 23, 21.5],['3', 30, 21],['4', 50, 21],['5', 70, 21.5],['6', 72, 21.5],['7', 73, 21.5],['8', 74, 20],['9', 21, 21.5]]);
+			//var data = google.visualization.arrayToDataTable(chartData);
+	      var options =
+	      {
+	         title : 'Temperature  Graph',
+	         curveType: 'function',
+	    		legend: { position: 'bottom' }
+	      };
+	
+	      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+	      chart.draw(dataTable, options);
+     	}
    }
 
-   // Auto-refresh
-   // Turn on/off the variable refresh if box is checked
-   $("#refresh-1").on("change", function()
-   {
-      if ($("#refresh-1").is(":checked"))
-      {
-         var time = ($("#refresh-time-1").val() === '') ? 5000 : $("#refresh-time-1").val();
-         $("#get-var-1").attr("disabled", "disabled");
-         timer1 = setInterval(function()
-         {
-            getVariable1();
-         }, time);
-      }
-      else
-      {
-         $("#get-var-1").removeAttr("disabled");
-         if (timer1)
-         {
-            clearInterval(timer1);
-         }
-      }
-   });
-   $("#refresh-2").on("change", function()
-   {
-      if ($("#refresh-2").is(":checked"))
-      {
-         var time = ($("#refresh-time-2").val() === '') ? 5000 : $("#refresh-time-2").val();
-         $("#get-var-2").attr("disabled", "disabled");
-         timer2 = setInterval(function()
-         {
-            getVariable2();
-         }, time);
-      }
-      else
-      {
-         $("#get-var-2").removeAttr("disabled");
-         if (timer2)
-         {
-            clearInterval(timer2);
-         }
-      }
-   });
-   $("#refresh-3").on("change", function()
-   {
-      if ($("#refresh-3").is(":checked"))
-      {
-         var time = ($("#refresh-time-3").val() === '') ? 5000 : $("#refresh-time-3").val();
-         $("#get-var-3").attr("disabled", "disabled");
-         timer3 = setInterval(function()
-         {
-            getVariable3();
-         }, time);
-      }
-      else
-      {
-         $("#get-var-3").removeAttr("disabled");
-         if (timer3)
-         {
-            clearInterval(timer3);
-         }
-      }
-   });
-   $("#refresh-4").on("change", function()
-   {
-      if ($("#refresh-4").is(":checked"))
-      {
-         var time = ($("#refresh-time-4").val() === '') ? 5000 : $("#refresh-time-4").val();
-         $("#get-var-4").attr("disabled", "disabled");
-         timer4 = setInterval(function()
-         {
-            getVariable4();
-         }, time);
-      }
-      else
-      {
-         $("#get-var-4").removeAttr("disabled");
-         if (timer4)
-         {
-            clearInterval(timer4);
-         }
-      }
-   });
+  
 
 });
