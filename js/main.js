@@ -8,6 +8,8 @@ $(document).ready(function()
    var lastSample = new Date();
 	//var chartData = [['Time', 'Temp A', 'Temp B']];
 	var dataTable = null;
+	var lastTempA = 0;
+	var lastTempB = 0;
 
 	var googleOptions = {packages: ['corechart'], callback : BuildGoogleTable};
 	google.load('visualization', '1', googleOptions);
@@ -172,10 +174,12 @@ $(document).ready(function()
 				rawDataPrevious = rawData;
 				if(dataTable !== null)
 				{
-					
-					dataTable.addRow([new Date(), parseFloat(dats[0]), annotA, errorA, parseFloat(dats[1]), annotB, errorB]);
-					 
-					document.getElementById('lbl-debug-data').innerHTML = dataTable.getNumberOfRows() + " Samples.";
+					if(isDifferent( parseFloat(dats[0]),  parseFloat(dats[1])) || annotA != null || annotB != null)
+					{
+						dataTable.addRow([new Date(), parseFloat(dats[0]), annotA, errorA, parseFloat(dats[1]), annotB, errorB]);
+						document.getElementById('lbl-debug-data').innerHTML = dataTable.getNumberOfRows() + " Samples.";
+						drawChart();
+					}
 				}
 				else
 				{
@@ -187,6 +191,25 @@ $(document).ready(function()
 		
 		 //$("#lbl-sample-date").innerHTML = "your text goes here"; 
 	}
+	
+	function isDifferent(tmpa, tmpb)
+	{
+		if(tmpa > lastTempA + 0.25 || tmpa < lastTempA - 0.25 )
+		{
+			lastTempA = tmpa;
+			lastTempB = tmpb;
+			return true;	
+		}
+		
+		if(tmpb > lastTempB + 0.25 || tmpb < lastTempB - 0.25 )
+		{
+			lastTempA = tmpa;
+			lastTempB = tmpb;
+			return true;	
+		}
+		
+		return false;
+	}
 
 
 	function getTemperatureData()
@@ -197,7 +220,6 @@ $(document).ready(function()
          rawData = res.result;
          lastSample = new Date();
          parseData();
-         drawChart();
          }
          ).fail(function(obj)
       {
@@ -205,7 +227,6 @@ $(document).ready(function()
       	rawData = "0.0;0.0;5;5";
          lastSample = new Date();
          parseData();
-         drawChart();
       });    
 	}
 
