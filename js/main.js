@@ -303,7 +303,7 @@ $(document).ready(function()
 	      var options =
 	      {
 	         title : 'Temperature  Graph',
-	         curveType: 'function',
+	         //curveType: 'function',
 	    		legend: { position: 'bottom' }
 	      };
 	
