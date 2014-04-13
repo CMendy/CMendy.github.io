@@ -1,7 +1,7 @@
 $(document).ready(function()
 {
 
-   var baseURL = "https://api.spark.io/v1/devices/";
+   //variables
    var sampleTimer;
    var rawData = "0.0;0.0;0;0";
    var rawDataPrevious = "0.0;0.0;0;0";
@@ -10,6 +10,31 @@ $(document).ready(function()
 	var dataTable = null;
 	var lastTempA = 0;
 	var lastTempB = 0;
+	
+	//Config
+	var baseURL = "https://api.spark.io/v1/devices/";
+	var recordRepeatedData = true;
+	var getingData = false;
+	var suspendGraphUpdate = false;
+	
+	var simulateData = false;
+	var simulatedData = ["20.0;20.0;0;0",
+	"20.0;20.0;0;0",
+	"21.0;21.0;0;0",
+	"22.0;23.0;0;0",
+	"23.0;26.0;0;0",
+	"24.0;30.0;0;0",
+	"24.0;35.0;0;0",
+	"24.0;41.0;0;0",
+	"24.0;48.0;0;0",
+	"24.0;56.0;0;0",
+	"23.0;65.0;0;0",
+	"22.0;75.0;0;0",
+	"21.0;86.0;0;0",
+	"20.0;86.0;0;0",
+	"20.0;86.0;0;0",
+	"0.0;0.0;1;2"];
+	var simulatedDataIndex = 0;
 
 	var googleOptions = {packages: ['corechart'], callback : BuildGoogleTable};
 	google.load('visualization', '1', googleOptions);
@@ -168,7 +193,7 @@ $(document).ready(function()
 			}
 			document.getElementById('temp-b-error').innerHTML = errorB;
 			
-			if(rawDataPrevious != rawData)
+			if(rawDataPrevious != rawData || recordRepeatedData)
 			{
 				//chartData.push([new Date(), parseFloat(dats[0]), parseFloat(dats[1]) ]);
 				rawDataPrevious = rawData;
@@ -208,26 +233,44 @@ $(document).ready(function()
 			return true;	
 		}
 		
-		return false;
+		return recordRepeatedData;
 	}
 
 
 	function getTemperatureData()
 	{
-		var url = baseURL + $("#core-id").val() + "/data?access_token=" + $("#api-token").val();
-      $.getJSON(url, function(res)
-      {
-         rawData = res.result;
-         lastSample = new Date();
-         parseData();
-         }
-         ).fail(function(obj)
-      {
-      	onGetDataFailure();
-      	rawData = "0.0;0.0;5;5";
-         lastSample = new Date();
-         parseData();
-      });    
+		if(simulateData)
+		{
+			rawData = simulatedData[simulatedDataIndex];
+			lastSample = new Date();
+			parseData();
+			
+			if(++simulatedDataIndex >= simulatedData.length)
+				simulatedDataIndex = 0;
+		}
+		else
+		{
+			if(!getingData)
+			{
+				getingData = true;
+				var url = baseURL + $("#core-id").val() + "/data?access_token=" + $("#api-token").val();
+		      $.getJSON(url, function(res)
+		      {
+		         rawData = res.result;
+		         lastSample = new Date();
+		         parseData();
+		         getingData = false;
+		         }
+		         ).fail(function(obj)
+		      {
+		      	onGetDataFailure();
+		      	rawData = "0.0;0.0;5;5";
+		         lastSample = new Date();
+		         parseData();
+		         getingData = false;
+		      });   
+	     }
+      } 
 	}
 
    ////
@@ -239,6 +282,27 @@ $(document).ready(function()
    ////
    // Methods
    ////
+   
+   function myAlert(text, type, time)
+   {
+   	var lbl =  $("#lbl-alert");
+   	lbl.innerHTML = text;
+   	
+   	alert = $("#info-alert");
+   	alert.removeClass("alert-danger").removeClass("alert-success").removeClass("alert-warning").removeClass("alert-info");
+      alert.addClass(type);
+      alert.show();
+      
+      
+      if(time != null)
+      {
+	      setTimeout(function()
+	      {
+	         alert.hide();
+	      }, time);
+      }
+   }
+   
    // On method success
    function onMethodSuccess()
    {
@@ -301,6 +365,30 @@ $(document).ready(function()
       getTemperatureData();
    });
    
+   $('#post-pausegraph').on("click", function()
+   {
+   	suspendGraphUpdate = !suspendGraphUpdate;
+   	var btn = $('#post-pausegraph');
+      if(suspendGraphUpdate)
+      {	 
+      	 btn.removeClass("btn-warning").addClass("btn-success");
+			 btn.html("Resume Graph");
+			 myAlert("Graph Update is suppended, but we are still collecting data", "alert-warning", 3000);
+      }
+      else
+      {
+      	btn.removeClass("btn-success").addClass("btn-warning");
+       	btn.html("Pause Graph");
+       	myAlert("Graph Update is resumed.", "alert-info", 3000);
+      	drawChart();
+      }
+   });
+   
+   $("#post-cleardata").on("click", function()
+   {
+     	BuildGoogleTable();
+   });
+   
 
    ////
    // Variables
@@ -317,7 +405,7 @@ $(document).ready(function()
 
    function drawChart()
    {
-   	if(dataTable !== null)
+   	if(dataTable !== null && !suspendGraphUpdate)
    	{
 	      //var data = google.visualization.arrayToDataTable([['Time', 'TempA', 'TempB'], ['1', 21, 21.5], ['2', 23, 21.5],['3', 30, 21],['4', 50, 21],['5', 70, 21.5],['6', 72, 21.5],['7', 73, 21.5],['8', 74, 20],['9', 21, 21.5]]);
 			//var data = google.visualization.arrayToDataTable(chartData);

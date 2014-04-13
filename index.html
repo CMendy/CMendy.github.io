@@ -19,13 +19,20 @@
 
    <body data-ng-app>
       <div class="container">
+
          <h2>Nick's Temperature Monitor</h2>
-         <div class="alert fade in" id="info-alert" hidden data-spy="affix">Alert Here</div>
+         <div class="alert fade in alert-dismissable" id="info-alert" hidden data-spy="affix">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+               &times;
+            </button>
+            <strong> <label id="lbl-alert">Alert Here!</label> </strong>
+         </div>
+
          <div class="panel panel-default" id="settings-panel">
             <div class="panel-heading">
                <h4 class="panel-title"><a data-toggle="collapse" href="#settings"> Core ID and API Token </a></h4>
             </div>
-            <div id="settings" class="panel-collapse collapse in">
+            <div id="settings" class="panel-collapse collapse">
                <div class="panel-body">
                   <p>
                      Visit <a href="https://www.spark.io/build" target="_blank">https://www.spark.io/build</a> to get the ID of the core to access and your unique API token.
@@ -53,42 +60,109 @@
                   </p>
                   <div class="row">
                      <div class="col-lg-5">
-                        <h3><span class="label label-success">Temp A</span>
-                        <span class="label label-default" id="temp-a">20.75 C</span> <span class="label label-danger" id="temp-a-error">Danger</span></h3>
+                        <h3><span class="label label-success">Temp A</span><span class="label label-default" id="temp-a">20.75 C</span><span class="label label-danger" id="temp-a-error">Danger</span></h3>
                      </div><!-- /.col-lg-6 -->
                      <div class="col-lg-5">
-                        <h3><span class="label label-success">Temp B</span>
-                        <span class="label label-default" id="temp-b">22.75 C</span> <span class="label label-danger"id="temp-b-error">Danger</span></h3>
+                        <h3><span class="label label-success">Temp B</span><span class="label label-default" id="temp-b">22.75 C</span><span class="label label-danger"id="temp-b-error">Danger</span></h3>
                      </div><!-- /.col-lg-6 -->
                   </div><!-- /.row -->
                   <div class="row">
                      <div class="col-lg-2">
-                        <div class="input-group">
-                           <button class="btn btn-success" type="button" id="post-test">
-                              Test
-                           </button>
+                        <!-- <div class="input-group">
+                        <button class="btn btn-success" type="button" id="post-test">
+                        Test
+                        </button>
                         </div><!-- /input-group -->
+                        -->
                      </div><!-- /.col-lg-6 -->
                   </div>
                </div>
             </div>
          </div>
-         
+
+         <div class="panel panel-primary" id="alarms-panel">
+            <div class="panel-heading">
+               <h4 class="panel-title"><a data-toggle="collapse" href="#alarms"> Alarms and notifications </a></h4>
+            </div>
+            <div id="alarms" class="panel-collapse collapse in">
+               <div class="panel-body">
+
+                  <div class="row">
+                     <!-- TEMP A LIMIT -->
+                     <div class="col-md-6">
+                        <div class="panel panel-info">
+                           <div class="panel-heading">
+                              Temp A Limit Alarm
+                           </div>
+                           <ul class="list-group">
+                              <li class="list-group-item">
+                                 <div class="input-group">
+                                    <span class="input-group-addon"> Min Temp °C</span>
+                                    <input type="text" class="form-control" id="min-temp-a">
+                                 </div>
+                              </li>
+                              <li class="list-group-item">
+                                 <div class="input-group">
+                                    <span class="input-group-addon"> Max Temp °C</span>
+                                    <input type="text" class="form-control" id="max-temp-a">
+                                 </div>
+                              </li>
+                           </ul>
+                        </div>
+                     </div><!-- "col-md-6" -->
+
+                     <!-- TEMP B LIMIT -->
+                     <div class="col-md-6">
+                        <div class="panel panel-info">
+                           <div class="panel-heading">
+                              Temp B Limit Alarm
+                           </div>
+                           <ul class="list-group">
+                              <li class="list-group-item">
+                                 <div class="input-group">
+                                    <span class="input-group-addon"> Min Temp °C</span>
+                                    <input type="text" class="form-control" id="min-temp-b">
+                                 </div>
+                              </li>
+                              <li class="list-group-item">
+                                 <div class="input-group">
+                                    <span class="input-group-addon"> Max Temp °C</span>
+                                    <input type="text" class="form-control" id="max-temp-b">
+                                 </div>
+                              </li>
+                           </ul>
+                        </div>
+                     </div><!-- "col-md-6" -->
+                  </div><!-- "row" -->
+                  
+               </div>
+            </div>
+         </div>
+
          <div class="panel panel-primary">
             <div class="panel-heading">
                <h4 class="panel-title"><a data-toggle="collapse" href="#graphs">Graph.</a></h4>
             </div>
+
             <div id="graphs" class="panel-collapse collapse in">
                <div class="panel-body">
-                   <p>
+                  <p>
                      <label id="lbl-debug-data">Last Sample Today!</label>
-                  </p> 
-                  <div id="chart_div" style="width: 100%; height: 500px;">Drawing Graph</div>
+                  </p>
+                  <!-- <div class="input-group"> -->
+                  <button type="button" id="post-pausegraph" class="btn btn-warning">
+                     Pause Graph
+                  </button>
+                  <button type="button" id="post-cleardata" class="btn btn-danger">
+                     Clear Samples
+                  </button>
+                  <!-- </div> <!-- row -->
+                  <div id="chart_div" style="width: 100%; height: 500px;">
+                     Drawing Graph
+                  </div>
                </div>
             </div>
          </div>
-         
-         
 
       </div>
 
